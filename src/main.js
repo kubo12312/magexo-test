@@ -6,10 +6,16 @@ import { createProvider } from './vue-apollo'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faAngleDown, faAngleLeft, faAngleRight } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
+
+import 'bootstrap/dist/css/bootstrap.css'
+import 'bootstrap-vue/dist/bootstrap-vue.css'
 
 Vue.config.productionTip = false
 library.add(faAngleDown, faAngleLeft, faAngleRight)
 Vue.component('font-awesome-icon', FontAwesomeIcon)
+Vue.use(BootstrapVue)
+Vue.use(IconsPlugin)
 new Vue({
   router,
   store,

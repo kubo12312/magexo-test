@@ -1,34 +1,42 @@
 <template>
   <div id="app">
-    <nav>
-      <div
-        class="menu-item"
-        v-for="category in categories.children"
-        :key="category.uid"
+    <b-navbar
+      toggleable="lg"
+      type="light"
+      variant="light"
+    >
+      <b-navbar-brand href="/">Magexo test</b-navbar-brand>
+
+      <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
+
+      <b-collapse
+        id="nav-collapse"
+        is-nav
       >
-        <router-link :to="{ name: 'ProductsView', params: {name: nameEdit(category.name), id: category.uid}}"> {{ category.name }}
-          <span
-            class="arrow"
-            v-if="category.children_count > 0"
-          >
-            <font-awesome-icon icon="fa-solid fa-angle-down" />
-          </span>
-        </router-link>
-        <div
-          class="submenu"
-          v-if="category.children_count > 0"
-        >
-          <div
-            class="menu-item"
-            v-for="subcategory in category.children"
-            :key="subcategory.uid"
-          >
-            <router-link :to="{ name: 'ProductsView', params: {name: nameEdit(subcategory.name), id: subcategory.uid }}"> {{ subcategory.name }}
-            </router-link>
-          </div>
-        </div>
-      </div>
-    </nav>
+        <b-navbar-nav>
+          <template v-for="category in categories.children">
+            <b-nav-item
+              v-if="category.children_count === '0'"
+              :key="category.uid"
+              :to="{ name: 'ProductsView', params: {name: nameEdit(category.name), id: category.uid}}"
+            >{{ category.name }}
+            </b-nav-item>
+            <b-nav-item-dropdown
+              v-else
+              :key="category.uid"
+              :text="category.name"
+            >
+              <b-dropdown-item
+                v-for="subcategory in category.children"
+                :key="subcategory.uid"
+                :to="{ name: 'ProductsView', params: {name: nameEdit(subcategory.name), id: subcategory.uid }}"
+              >{{ subcategory.name }}</b-dropdown-item>
+            </b-nav-item-dropdown>
+          </template>
+        </b-navbar-nav>
+      </b-collapse>
+    </b-navbar>
+
     <router-view />
   </div>
 </template>
@@ -92,48 +100,22 @@ export default {
   text-align: center;
 }
 
-nav {
-  height: 5rem;
-  padding: 0 1.5rem;
-  border-bottom: 0.0625rem solid #e7e7e7;
-  position: relative;
-  display: flex;
-  justify-content: center;
+.navbar {
+  height: 80px;
   align-items: center;
+  padding: 0 1rem;
 
-  .menu-item {
-    padding: 0 1rem;
-    display: flex;
-    align-items: center;
-    height: 100%;
-    .submenu {
-      z-index: 100;
-      display: none;
-      background: #fff;
-      position: absolute;
-      top: 100%;
-      left: 0;
-      right: 0;
-      padding: 1.875rem;
-      border-bottom: 0.0625rem solid #e7e7e7;
-      border-top: 0.0625rem solid #e7e7e7;
-      justify-content: center;
-    }
-
-    &:hover > .submenu,
-    .submenu:hover {
-      display: flex;
-    }
+  @media screen and (max-width: 991px) {
+    height: auto;
+    padding: 1rem !important;
   }
 
-  a {
-    font-size: 1.125rem;
-    color: rgb(23, 32, 38);
-    text-decoration: none;
+  &-collapse {
+    justify-content: center;
+  }
 
-    .arrow {
-      margin-left: 0.25rem;
-    }
+  .nav-item {
+    padding: 0 0.5rem;
   }
 }
 </style>

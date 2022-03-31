@@ -43,17 +43,21 @@ export default {
   background: #fff;
   transition: 0.2s all ease;
   cursor: pointer;
+  display: flex;
+  flex-direction: column;
   &:hover {
     transform: scale(1.1);
   }
 
   img {
     max-width: 100%;
+    margin-top: auto;
   }
 
   .price {
     font-size: 1rem;
     font-weight: 700;
+    margin-top: 1rem;
   }
 }
 </style>

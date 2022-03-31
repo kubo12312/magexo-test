@@ -12,31 +12,11 @@
           :sku="product.sku"
         ></product>
       </div>
-      <ul
-        class="pagination"
-        v-if="products.total_count > pageSize"
-      >
-        <li
-          @click="previous()"
-          :class="{ disabled: currentPage === 1 }"
-        >
-          <font-awesome-icon icon="fa-solid fa-angle-left" />
-        </li>
-        <li
-          v-for="index in totalPages"
-          :key="index"
-          :class="{ active: index === currentPage }"
-          @click="changePage(index)"
-        >
-          {{index}}
-        </li>
-        <li
-          @click="next()"
-          :class="{ disabled: currentPage === totalPages }"
-        >
-          <font-awesome-icon icon="fa-solid fa-angle-right" />
-        </li>
-      </ul>
+      <b-pagination
+        v-model="currentPage"
+        :total-rows="products.total_count"
+        :per-page="10"
+      ></b-pagination>
     </div>
   </div>
 </template>
@@ -98,11 +78,6 @@ export default {
       id: this.$route.params.id
     }
   },
-  computed: {
-    totalPages () {
-      return Math.ceil(this.products.total_count / this.pageSize)
-    }
-  },
   watch: {
     '$route.params.id': function () {
       this.id = this.$route.params.id
@@ -137,6 +112,22 @@ export default {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   gap: 1rem;
+
+  @media screen and (max-width: 1380px) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  @media screen and (max-width: 991px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  @media screen and (max-width: 767px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media screen and (max-width: 540px) {
+    grid-template-columns: 1fr;
+  }
 }
 
 .pagination {
