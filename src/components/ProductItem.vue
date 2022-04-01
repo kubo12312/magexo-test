@@ -1,12 +1,24 @@
 <template>
-  <div
-    class="item"
-    @click="openProduct()"
+  <b-card
+    :title="name"
+    :img-src="image"
+    img-alt="Image"
+    img-top
+    class="mb-2"
   >
-    <h3>{{ name }}</h3>
-    <img :src="image">
-    <p class="price">{{price.currency}} {{ price.value }}</p>
-  </div>
+    <b-card-text>
+      Price: <strong>{{price.value}} {{price.currency}}</strong>
+    </b-card-text>
+
+    <b-button
+      :to="{name: 'ProductView',
+        params: {
+          sku: this.sku,
+          name: this.name
+        }}"
+      variant="primary"
+    >Detail</b-button>
+  </b-card>
 </template>
 
 <script>
@@ -21,43 +33,12 @@ export default {
   data () {
     return {}
   },
-  mounted () {},
-
-  methods: {
-    openProduct () {
-      this.$router.push({
-        name: 'ProductView',
-        params: {
-          sku: this.sku
-        }
-      })
-    }
-  }
+  mounted () {}
 }
 </script>
 
 <style lang="scss" scoped>
-.item {
-  padding: 1rem;
-  border: 1px solid #eee;
-  background: #fff;
-  transition: 0.2s all ease;
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  &:hover {
-    transform: scale(1.1);
-  }
-
-  img {
-    max-width: 100%;
-    margin-top: auto;
-  }
-
-  .price {
-    font-size: 1rem;
-    font-weight: 700;
-    margin-top: 1rem;
-  }
+.card-body {
+  text-align: left;
 }
 </style>

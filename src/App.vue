@@ -5,39 +5,44 @@
       type="light"
       variant="light"
     >
-      <b-navbar-brand href="/">Magexo test</b-navbar-brand>
+      <div class="nav-wrapper">
+        <b-navbar-brand href="/">Magexo test</b-navbar-brand>
 
-      <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
+        <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
-      <b-collapse
-        id="nav-collapse"
-        is-nav
-      >
-        <b-navbar-nav>
-          <template v-for="category in categories.children">
-            <b-nav-item
-              v-if="category.children_count === '0'"
-              :key="category.uid"
-              :to="{ name: 'ProductsView', params: {name: nameEdit(category.name), id: category.uid}}"
-            >{{ category.name }}
-            </b-nav-item>
-            <b-nav-item-dropdown
-              v-else
-              :key="category.uid"
-              :text="category.name"
-            >
-              <b-dropdown-item
-                v-for="subcategory in category.children"
-                :key="subcategory.uid"
-                :to="{ name: 'ProductsView', params: {name: nameEdit(subcategory.name), id: subcategory.uid }}"
-              >{{ subcategory.name }}</b-dropdown-item>
-            </b-nav-item-dropdown>
-          </template>
-        </b-navbar-nav>
-      </b-collapse>
+        <b-collapse
+          id="nav-collapse"
+          is-nav
+        >
+          <b-navbar-nav>
+            <template v-for="category in categories.children">
+              <b-nav-item
+                v-if="category.children_count === '0'"
+                :key="category.uid"
+                :to="{ name: 'ProductsView', params: {name: nameEdit(category.name), id: category.uid, title: category.name}}"
+              >{{ category.name }}
+              </b-nav-item>
+              <b-nav-item-dropdown
+                v-else
+                :key="category.uid"
+                :text="category.name"
+              >
+                <b-dropdown-item
+                  v-for="subcategory in category.children"
+                  :key="subcategory.uid"
+                  :to="{ name: 'ProductsView', params: {name: nameEdit(subcategory.name), id: subcategory.uid, title: subcategory.name }}"
+                >{{ subcategory.name }}</b-dropdown-item>
+                <b-dropdown-item :to="{ name: 'ProductsView', params: {name: nameEdit(category.name), id: category.uid, title: category.name}}">All {{ nameLower(category.name) }}</b-dropdown-item>
+              </b-nav-item-dropdown>
+            </template>
+          </b-navbar-nav>
+        </b-collapse>
+      </div>
     </b-navbar>
 
-    <router-view />
+    <main>
+      <router-view />
+    </main>
   </div>
 </template>
 
@@ -82,6 +87,9 @@ export default {
   methods: {
     nameEdit (name) {
       return name.split(/[ ,]+/).join('-').toLowerCase()
+    },
+    nameLower (name) {
+      return name.toLowerCase()
     }
   },
   data: () => ({
@@ -98,24 +106,59 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
+  background: #f9f9f9;
+  min-height: 100vh;
 }
 
-.navbar {
+main {
+  padding: 3rem 1rem;
+
+  .lingallery,
+  .lingallery > figure {
+    width: 100% !important;
+  }
+}
+
+.navbar.bg-light {
   height: 80px;
   align-items: center;
   padding: 0 1rem;
+  background-color: #fff !important;
 
   @media screen and (max-width: 991px) {
     height: auto;
     padding: 1rem !important;
   }
 
-  &-collapse {
+  .nav-wrapper {
+    max-width: 1200px;
+    width: 100%;
+    display: flex;
+    margin: 0 auto;
+
+    @media screen and (max-width: 991px) {
+      max-width: 100%;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
+  }
+
+  .navbar-collapse {
     justify-content: center;
+  }
+
+  .navbar-nav {
+    @media screen and (max-width: 991px) {
+      text-align: left;
+    }
   }
 
   .nav-item {
     padding: 0 0.5rem;
+
+    .nav-link {
+      color: #081828 !important;
+    }
   }
 }
 </style>

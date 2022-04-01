@@ -1,22 +1,29 @@
 <template>
   <div>
-    <div v-if="$apollo.queries.products.loading">Loading...</div>
+    <div v-if="$apollo.queries.products.loading">
+      <b-spinner variant="primary"></b-spinner>
+    </div>
     <div v-else>
-      <div class="grid-wrapper">
-        <product
-          v-for="(product, index) in products.items"
-          :key="index"
-          :name="product.name"
-          :image="product.small_image.url"
-          :price="product.price_range.minimum_price.regular_price"
-          :sku="product.sku"
-        ></product>
+      <div class="wrapper">
+        <h1>{{ createTitle}}</h1>
+        <div class="grid-wrapper">
+          <product
+            v-for="(product, index) in products.items"
+            :key="index"
+            :name="product.name"
+            :image="product.small_image.url"
+            :price="product.price_range.minimum_price.regular_price"
+            :sku="product.sku"
+          ></product>
+        </div>
+        <b-pagination
+          v-if="products.total_count > 10"
+          v-model="currentPage"
+          :total-rows="products.total_count"
+          :per-page="10"
+          class="mt-3"
+        ></b-pagination>
       </div>
-      <b-pagination
-        v-model="currentPage"
-        :total-rows="products.total_count"
-        :per-page="10"
-      ></b-pagination>
     </div>
   </div>
 </template>
@@ -75,14 +82,21 @@ export default {
       currentPage: 1,
       products: [],
       pageSize: 10,
-      id: this.$route.params.id
+      id: this.$route.params.id,
+      title: this.$route.params.name
     }
   },
   watch: {
     '$route.params.id': function () {
       this.id = this.$route.params.id
+      this.title = this.$route.params.title
       this.product = []
       this.currentPage = 1
+    }
+  },
+  computed: {
+    createTitle () {
+      return this.title.replaceAll('-', ' ')
     }
   },
   methods: {
@@ -107,21 +121,24 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.wrapper {
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+
+  h1 {
+    text-transform: capitalize;
+    text-align: left;
+    margin-bottom: 2rem;
+  }
+}
+
 .grid-wrapper {
-  padding: 2rem;
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 1rem;
 
-  @media screen and (max-width: 1380px) {
-    grid-template-columns: repeat(4, 1fr);
-  }
-
   @media screen and (max-width: 991px) {
-    grid-template-columns: repeat(3, 1fr);
-  }
-
-  @media screen and (max-width: 767px) {
     grid-template-columns: repeat(2, 1fr);
   }
 

@@ -1,5 +1,7 @@
 <template>
-  <div v-if="$apollo.queries.productGallery.loading">Loading...</div>
+  <div v-if="$apollo.queries.productGallery.loading || $apollo.queries.product.loading">
+    <b-spinner variant="primary"></b-spinner>
+  </div>
   <div
     v-else
     class="grid"
@@ -7,8 +9,6 @@
     <div>
       <lingallery
         :iid.sync="currentId"
-        :width="width"
-        :height="height"
         :items="images"
       />
     </div>
@@ -95,9 +95,7 @@ export default {
     return {
       productGallery: [],
       product: [],
-      currentId: null,
-      width: 600,
-      height: 400
+      currentId: null
     }
   },
 
@@ -110,12 +108,9 @@ export default {
           thumbnail: this.productGallery.media_gallery[i].url
         })
       }
-      console.log(images)
       return images
     }
-  },
-
-  methods: {}
+  }
 }
 </script>
 
@@ -126,6 +121,10 @@ export default {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 1rem;
+
+  @media screen and (max-width: 991px) {
+    grid-template-columns: 1fr;
+  }
 
   .text-left {
     text-align: left;
