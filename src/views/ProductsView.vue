@@ -1,120 +1,29 @@
 <template>
   <div>
-    <div v-if="$apollo.queries.products.loading">
-      <b-spinner variant="primary"></b-spinner>
-    </div>
-    <div v-else>
-      <div class="wrapper">
-        <h1>{{ createTitle}}</h1>
-        <div class="grid-wrapper">
-          <product
-            v-for="(product, index) in products.items"
-            :key="index"
-            :name="product.name"
-            :image="product.small_image.url"
-            :price="product.price_range.minimum_price.regular_price"
-            :sku="product.sku"
-          ></product>
-        </div>
-        <b-pagination
-          v-if="products.total_count > 10"
-          v-model="currentPage"
-          :total-rows="products.total_count"
-          :per-page="10"
-          class="mt-3"
-        ></b-pagination>
-      </div>
-    </div>
+    <products
+      :id="id"
+      :title="title"
+    ></products>
   </div>
 </template>
 
 <script>
-import gql from 'graphql-tag'
-import product from '@/components/ProductItem.vue'
-
-const PRODUCTS = gql`
-  query ($id: String!, $currentPage: Int!, $pageSize: Int!) {
-    products(
-      filter: { category_uid: { eq: $id } }
-      currentPage: $currentPage
-      pageSize: $pageSize
-    ) {
-      total_count
-      items {
-        name
-        sku
-        small_image {
-          url
-        }
-        price_range {
-          minimum_price {
-            regular_price {
-              value
-              currency
-            }
-          }
-        }
-      }
-    }
-  }
-`
-
+import Products from '@/components/Products.vue'
 export default {
   name: 'ProductsView',
   components: {
-    product
-  },
-  apollo: {
-    products: {
-      query: PRODUCTS,
-      variables () {
-        return {
-          id: this.id,
-          currentPage: this.currentPage,
-          pageSize: this.pageSize
-        }
-      },
-      update: (data) => data.products
-    }
-  },
-  data () {
-    return {
-      currentPage: 1,
-      products: [],
-      pageSize: 10,
-      id: this.$route.params.id,
-      title: this.$route.params.name
-    }
+    Products
   },
   watch: {
     '$route.params.id': function () {
       this.id = this.$route.params.id
       this.title = this.$route.params.title
-      this.product = []
-      this.currentPage = 1
     }
   },
-  computed: {
-    createTitle () {
-      return this.title.replaceAll('-', ' ')
-    }
-  },
-  methods: {
-    changePage (index) {
-      this.products = []
-      this.currentPage = index
-    },
-    previous () {
-      if (this.currentPage > 1) {
-        this.products = []
-        this.currentPage--
-      }
-    },
-    next () {
-      if (this.currentPage < this.totalPages) {
-        this.products = []
-        this.currentPage++
-      }
+  data () {
+    return {
+      id: this.$route.params.id,
+      title: this.$route.params.name
     }
   }
 }

@@ -1,48 +1,56 @@
 <template>
   <div id="app">
-    <b-navbar
-      toggleable="lg"
-      type="light"
-      variant="light"
-    >
-      <div class="nav-wrapper">
-        <b-navbar-brand href="/">Magexo test</b-navbar-brand>
+    <div v-if="$apollo.queries.categories.loading">
+      <b-spinner
+        variant="primary"
+        class="mt-4"
+      ></b-spinner>
+    </div>
+    <div v-else>
+      <b-navbar
+        toggleable="lg"
+        type="light"
+        variant="light"
+      >
+        <div class="nav-wrapper">
+          <b-navbar-brand href="/">Magexo test</b-navbar-brand>
 
-        <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
+          <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
-        <b-collapse
-          id="nav-collapse"
-          is-nav
-        >
-          <b-navbar-nav>
-            <template v-for="category in categories.children">
-              <b-nav-item
-                v-if="category.children_count === '0'"
-                :key="category.uid"
-                :to="{ name: 'ProductsView', params: {name: nameEdit(category.name), id: category.uid, title: category.name}}"
-              >{{ category.name }}
-              </b-nav-item>
-              <b-nav-item-dropdown
-                v-else
-                :key="category.uid"
-                :text="category.name"
-              >
-                <b-dropdown-item
-                  v-for="subcategory in category.children"
-                  :key="subcategory.uid"
-                  :to="{ name: 'ProductsView', params: {name: nameEdit(subcategory.name), id: subcategory.uid, title: subcategory.name }}"
-                >{{ subcategory.name }}</b-dropdown-item>
-                <b-dropdown-item :to="{ name: 'ProductsView', params: {name: nameEdit(category.name), id: category.uid, title: category.name}}">All {{ nameLower(category.name) }}</b-dropdown-item>
-              </b-nav-item-dropdown>
-            </template>
-          </b-navbar-nav>
-        </b-collapse>
-      </div>
-    </b-navbar>
+          <b-collapse
+            id="nav-collapse"
+            is-nav
+          >
+            <b-navbar-nav>
+              <template v-for="category in categories.children">
+                <b-nav-item
+                  v-if="category.children_count === '0'"
+                  :key="category.uid"
+                  :to="{ name: 'ProductsView', params: {name: nameEdit(category.name), id: category.uid, title: category.name}}"
+                >{{ category.name }}
+                </b-nav-item>
+                <b-nav-item-dropdown
+                  v-else
+                  :key="category.uid"
+                  :text="category.name"
+                >
+                  <b-dropdown-item
+                    v-for="subcategory in category.children"
+                    :key="subcategory.uid"
+                    :to="{ name: 'ProductsView', params: {name: nameEdit(subcategory.name), id: subcategory.uid, title: subcategory.name }}"
+                  >{{ subcategory.name }}</b-dropdown-item>
+                  <b-dropdown-item :to="{ name: 'ProductsView', params: {name: nameEdit(category.name), id: category.uid, title: category.name}}">All {{ nameLower(category.name) }}</b-dropdown-item>
+                </b-nav-item-dropdown>
+              </template>
+            </b-navbar-nav>
+          </b-collapse>
+        </div>
+      </b-navbar>
 
-    <main>
-      <router-view />
-    </main>
+      <main>
+        <router-view />
+      </main>
+    </div>
   </div>
 </template>
 
