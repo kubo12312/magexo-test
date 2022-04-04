@@ -106,14 +106,15 @@ export default {
     return {
       currentPage: 1,
       products: [],
-      pageSize: 10
+      pageSize: 12
     }
   },
   watch: {
     id (newId, oldId) {
+      this.currentPage = 1
       this.$apollo.queries.products.refetch({
         id: newId,
-        currentPage: this.currentPage,
+        currentPage: 1,
         pageSize: this.pageSize
       })
     }
